@@ -1,0 +1,4 @@
+May 4 2010: I downloaded the DDK and kept only the header files (from inc\api\*) and the library files from wxp\i386\hid.lib. Everything else didn't seem to be needed.
+
+Windows Driver Kit Version 7.1.0
+http://www.microsoft.com/downloads/en/confirmation.aspx?familyId=36a2630f-5d56-43b5-b996-7633f2ec14ff&displayLang=en

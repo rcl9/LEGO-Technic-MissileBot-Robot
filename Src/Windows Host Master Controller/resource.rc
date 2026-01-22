@@ -1,0 +1,108 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource."
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+MAINDLGBOX DIALOGEX 160, 61, 548, 246
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Master controller"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    PUSHBUTTON      "Stop",IDD_STOP,242,139,50,14
+    PUSHBUTTON      "Exit",IDCANCEL,475,225,50,14
+    PUSHBUTTON      "Forward",IDD_FORWARD,242,120,50,14
+    PUSHBUTTON      "Reverse",IDD_REVERSE,242,161,50,14
+    PUSHBUTTON      "Right",IDD_RIGHT,298,139,50,14
+    PUSHBUTTON      "Left",IDD_LEFT,186,139,50,14
+    GROUPBOX        "Robot Navigation",IDC_STATIC,178,106,185,78
+    EDITTEXT        IDD_WII_INFO2,379,13,146,203,ES_MULTILINE | ES_READONLY | WS_VSCROLL | NOT WS_TABSTOP
+    PUSHBUTTON      "Rot <<",IDD_GUN_ROT_LEFT,242,26,50,14,WS_DISABLED
+    PUSHBUTTON      "Rot >>",IDD_GUN_ROT_RIGHT,299,26,50,14
+    PUSHBUTTON      "Reset",IDD_GUN_RESET,186,26,50,14
+    GROUPBOX        "Gattling Gun",IDC_STATIC,177,9,185,41
+    PUSHBUTTON      "Stop",IDD_TURRET_STOP,244,75,50,14
+    PUSHBUTTON      "Right",IDD_TURRET_RIGHT,301,75,50,14
+    PUSHBUTTON      "Left",IDD_TURRET_LEFT,188,75,50,14
+    GROUPBOX        "Turret Navigation",IDC_STATIC,177,58,185,41
+    PUSHBUTTON      "Stop all Motion - Abort!",IDD_STOP_ALL_MOTION,183,193,177,14
+    EDITTEXT        IDD_WII_INFO1,18,13,146,224,ES_MULTILINE | ES_READONLY | WS_VSCROLL | NOT WS_TABSTOP
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    "MAINDLGBOX", DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 533
+        BOTTOMMARGIN, 237
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

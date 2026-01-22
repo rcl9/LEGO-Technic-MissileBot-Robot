@@ -1,0 +1,161 @@
+// --------------------------------------------------------------------------------
+//
+//                           The Missile-Bot Client-Side Controller
+//
+//                                By RCL9, April 22 to May 13 2010
+//
+//                                  (Rob's Retro Computing Archive) 
+//                               RetroComputingArchive@gmail.com
+//                                                  github.com/rcl9
+//
+//                  Written in 'KISS Interactive C' (compiler version 8.0.2)
+//
+// --------------------------------------------------------------------------------
+
+#define Nc_RIGHT_WHEEL_MOTOR   0
+#define Nc_LEFT_WHEEL_MOTOR   3
+#define Nc_ROTATION_MOTOR   2
+
+#define Nc_GATTLING_GUN_SERVO   0
+
+// Light sensors as viewed from the front of the robot
+#define Nc_RIGHT_LIGHT_SENSOR__ANALOG_PORT	20	// Bright = 10, dark = 250
+#define Nc_LEFT_LIGHT_SENSOR__ANALOG_PORT	21	// Bright = 10, dark = 250
+
+#define Nc_FRONT_OPTICAL_RANGEFINDER__ANALOG_PORT	16
+#define Nc_BACK_OPTICAL_RANGEFINDER__ANALOG_PORT	17
+
+#define Nc_SERVO_CENTER	4200
+
+// -100 to 100
+#define Nc_FORWARD_MOTOR_POWER  100 
+#define Nc_REVERSE_MOTOR_POWER -100
+
+#define Nc_TURNING_FULL_MOTOR_POWER  40
+
+#define Nc_TURRET_LEFT_FULL_MOTOR_POWER  40
+#define Nc_TURRET_RIGHT_FULL_MOTOR_POWER  25
+
+void main()
+{
+    int sonar_is_on = 1;
+    int do_exit = 0;
+    int servo_inc_count = 0;
+    
+    printf( "The Missle Bot\n" );
+    printf( "Press START..." );
+    beep(); beep();
+    
+    while (!start_button() ) {}
+    beep(); beep();
+    
+    printf( "\nWaiting for cmd\n" );
+    
+    poke(0x3c, 1);     // Disable pcode character receive mode
+    poke(0x102b,0x33);      // Set serial baud rate to 1200
+    poke(0x102d,0x04);  // Enable receiver
+    
+    init_expbd_servos(1);	// Enable the servos
+
+    servo0 = Nc_SERVO_CENTER;
+
+    while (!stop_button() ) {
+        int left_light_intensity, right_light_intensity, difference;
+        int i;
+        
+        // Read the current intensities of the 2 light sensors
+        left_light_intensity = analog(2);
+        right_light_intensity = analog(3);
+        
+        //printf( "Right = %d, left = %d\n",  right_light_intensity, left_light_intensity );
+        
+        // Find the difference in their intensities
+        difference = left_light_intensity - right_light_intensity;
+        
+        if ( difference > 20 || difference < -20 ) {
+            if ( right_light_intensity > left_light_intensity ) {
+                // fd ( Nc_LONGITUDINAL_MOTOR );
+                // msleep( 250L );
+                // off ( Nc_LONGITUDINAL_MOTOR );
+            } else {
+                // bk ( Nc_LONGITUDINAL_MOTOR );
+                // msleep( 250L );
+                // off ( Nc_LONGITUDINAL_MOTOR );
+            }
+        }
+        
+        // Let's check the sonar sensor. Need to wait 0.03 seconds between each call
+        // if ( sonar_is_on && ( sonar() > 600 && sonar() < 700 ) ) {   // The argument is the distance from the sonar
+        //    tone ( 1000.0, 0.2 );
+        //}     
+
+        while (!(peek(0x102e) & 0x20)) { // Loop until character is received
+            sleep(0.01);
+            if ( stop_button() ) {
+                do_exit = 1;
+                break;
+            }
+        }
+        if (do_exit)
+          break;
+        
+        i=peek(0x102f);       // Transfer data from receive buffer
+        printf("Char Rx=%d\n",i);  // Display character on LCD
+        
+        if (i == 'S') {  // Stop all motors and servos
+            alloff();
+            printf( "Stop\n" );
+        } 
+        if (i == 'F') { // Forward 
+            printf( "Forward\n" );
+            motor( Nc_RIGHT_WHEEL_MOTOR, -Nc_FORWARD_MOTOR_POWER );
+            motor( Nc_LEFT_WHEEL_MOTOR, Nc_FORWARD_MOTOR_POWER );
+        } 
+        if (i == 'B') { // Reverse
+            printf( "Reverse\n" );
+            motor( Nc_RIGHT_WHEEL_MOTOR, -(Nc_REVERSE_MOTOR_POWER) );
+            motor( Nc_LEFT_WHEEL_MOTOR, Nc_REVERSE_MOTOR_POWER );
+        } 
+        if (i == 'L') { //  Left
+            printf( "Left\n" );
+            motor( Nc_RIGHT_WHEEL_MOTOR, -(Nc_TURNING_FULL_MOTOR_POWER) ) ;
+            motor( Nc_LEFT_WHEEL_MOTOR,  -(Nc_TURNING_FULL_MOTOR_POWER) );
+        } 
+        if (i == 'R') { //  Right
+            printf( "Right\n" );
+            motor( Nc_RIGHT_WHEEL_MOTOR, (Nc_TURNING_FULL_MOTOR_POWER) );
+            motor( Nc_LEFT_WHEEL_MOTOR,  (Nc_TURNING_FULL_MOTOR_POWER) ); 
+        }
+        if (i == '1') { //  Rotation motor counter-clockwise
+            printf( "Spin right\n" );
+            motor( Nc_ROTATION_MOTOR, -(Nc_TURRET_RIGHT_FULL_MOTOR_POWER) );
+        }
+        if (i == '2') { //  Rotation motor clockwise
+            printf( "Spin left\n" );
+            motor( Nc_ROTATION_MOTOR, (Nc_TURRET_LEFT_FULL_MOTOR_POWER) );
+        }
+        //if (i == '3') { //  Servo clockwise
+        //    printf( "Servo clockwise\n" );
+	//    if (servo0 < (Nc_SERVO_CENTER + 3000)) { 
+        //    	servo0 += 1000;
+ 	//    }
+        //}
+        if (i == '4') { //  Servo counter-clockwise
+            printf( "Servo counter-clockwise\n" );
+            if ( servo_inc_count < 3) {
+            	servo0 -= 1000;
+    	        ++servo_inc_count;
+	    }
+        }
+        if (i == '5') { //  Servo reset
+            printf( "Servo reset\n" );
+            servo0 = Nc_SERVO_CENTER;
+	    servo_inc_count = 0;
+        }
+    }
+    
+    init_expbd_servos(0);	// Disable the servos
+
+    // Turn off our motors
+    alloff ();
+}
